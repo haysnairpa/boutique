@@ -102,7 +102,7 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.greeting}>{greeting}, Aldi!</Text>
+        <Text style={styles.greeting}>{greeting}, Boutiqers!</Text>
         <TextInput
           style={styles.searchBar}
           placeholder="Search products..."
