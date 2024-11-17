@@ -1,18 +1,18 @@
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { Tabs } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   return (
-    <>
-    <Stack>
-      <Stack.Screen
+    <Tabs screenOptions={{ headerShown: false }}>
+      <Tabs.Screen
         name="home"
         options={{
-          headerShown: false,
+          title: "Home",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="home" size={24} color={color} />
+          ),
         }}
       />
-    </Stack>
-      <StatusBar backgroundColor="#161622" style="light" />
-    </>
+    </Tabs>
   );
 }

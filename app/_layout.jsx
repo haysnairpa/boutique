@@ -2,7 +2,6 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 
-
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
     "Helvetica": require("../assets/fonts/Helvetica.ttf"),
@@ -22,9 +21,19 @@ export default function RootLayout() {
   if (!fontsLoaded) {
     return null;
   }
+  
   return (
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      
+      <Stack.Screen 
+        name="addproduct" 
+        options={{
+          title: 'Tambah Produk',
+          headerShown: false,
+          presentation: 'modal'
+        }}
+      />
     </Stack>
   );
 }
