@@ -1,50 +1,89 @@
-# Welcome to your Expo app 👋
+# Boutique App 👗
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## 🚀 Quick Start
 
-## Get started
+### Prerequisites
+- Node.js (v14 or newer)
+- npm or yarn
+- Expo CLI
+- Firebase account
 
-1. Install dependencies
+### Installation
 
+1. Clone repository
+   ```bash
+   git clone https://github.com/haysnairpa/boutique.git
+   cd boutique
+   ```
+
+2. Install dependencies
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. Firebase Setup
    ```bash
-    npx expo start
+   # Copy template firebase config
+   cp firebase.config.example.js firebase.config.js
    ```
 
-In the output, you'll find options to open the app in a
+4. Update Firebase credentials in `firebase.config.js`
+   ```javascript
+   const firebaseConfig = {
+     apiKey: "xxx",
+     authDomain: "xxx",
+     projectId: "xxx",
+     storageBucket: "xxx",
+     messagingSenderId: "xxx",
+     appId: "xxx"
+   };
+   ```
+   > 📝 Contact maintainer to get valid Firebase credentials
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+5. Run the app
+   ```bash
+   npx expo start
+   ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 📱 Running the App
 
-## Get a fresh project
+After running `npx expo start`, you can open the app on:
 
-When you're ready, run:
+- 📱 **Expo Go** - Scan QR code with Expo Go app
+- 📱 **Android Emulator** - Press `a` in terminal
+- 📱 **iOS Simulator** - Press `i` in terminal (macOS only)
+- 🌐 **Web Browser** - Press `w` in terminal
 
-```bash
-npm run reset-project
-```
+## 🛠️ Tech Stack
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- React Native
+- Expo
+- Firebase (Firestore)
+- React Navigation
+- Expo Router
 
-## Learn more
+## 📝 Features
 
-To learn more about developing your project with Expo, look at the following resources:
+- ✨ Product management (CRUD)
+- 📸 Upload product photo
+- 🔍 Product search
+- 📱 Responsive design
+- 🎨 Custom UI components
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 🤝 Contributing
 
-## Join the community
+1. Fork repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
 
-Join our community of developers creating universal apps.
+## 📄 License
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+## 👥 Contact
+
+Maintainer - [@haysnairpa](https://github.com/haysnairpa)
+
+Project Link: [https://github.com/haysnairpa/boutique](https://github.com/haysnairpa/boutique)

@@ -2,15 +2,17 @@ import { View, Text, StyleSheet, FlatList, TextInput, Dimensions, Image, Touchab
 import { useState, useEffect } from "react";
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { db } from '../../firebase.config';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 
-const DUMMY_PRODUCTS = [
-  { id: '1', name: 'Floral Summer Dress', price: 299000, category: 'Dress', image: 'https://picsum.photos/200/300' },
-  { id: '2', name: 'Denim Jacket', price: 459000, category: 'Outerwear', image: 'https://picsum.photos/200/300' },
-  { id: '3', name: 'White Sneakers', price: 599000, category: 'Shoes', image: 'https://picsum.photos/200/300' },
-  { id: '4', name: 'Black Handbag', price: 899000, category: 'Bags', image: 'https://picsum.photos/200/300' },
-  { id: '5', name: 'Silk Scarf', price: 159000, category: 'Accessories', image: 'https://picsum.photos/200/300' },
-  { id: '6', name: 'Summer Hat', price: 129000, category: 'Accessories', image: 'https://picsum.photos/200/300' },
-];
+// const DUMMY_PRODUCTS = [
+//   { id: '1', name: 'Floral Summer Dress', price: 299000, category: 'Dress', image: 'https://picsum.photos/200/300' },
+//   { id: '2', name: 'Denim Jacket', price: 459000, category: 'Outerwear', image: 'https://picsum.photos/200/300' },
+//   { id: '3', name: 'White Sneakers', price: 599000, category: 'Shoes', image: 'https://picsum.photos/200/300' },
+//   { id: '4', name: 'Black Handbag', price: 899000, category: 'Bags', image: 'https://picsum.photos/200/300' },
+//   { id: '5', name: 'Silk Scarf', price: 159000, category: 'Accessories', image: 'https://picsum.photos/200/300' },
+//   { id: '6', name: 'Summer Hat', price: 129000, category: 'Accessories', image: 'https://picsum.photos/200/300' },
+// ];
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width / 2 - 24; // 2 columns with padding
@@ -18,7 +20,7 @@ const CARD_WIDTH = width / 2 - 24; // 2 columns with padding
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [greeting, setGreeting] = useState('');
-  const [filteredProducts, setFilteredProducts] = useState(DUMMY_PRODUCTS);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     const getGreeting = () => {
@@ -32,23 +34,37 @@ const Home = () => {
   }, []);
 
   // Fungsi untuk memfilter produk
-  useEffect(() => {
-    if (searchQuery.trim() === '') {
-      setFilteredProducts(DUMMY_PRODUCTS);
-      return;
-    }
+  // useEffect(() => {
+  //   if (searchQuery.trim() === '') {
+  //     setFilteredProducts(DUMMY_PRODUCTS);
+  //     return;
+  //   }
 
-    const query = searchQuery.toLowerCase().trim();
-    const filtered = DUMMY_PRODUCTS.filter(product => {
-      return (
-        product.name.toLowerCase().includes(query) ||
-        product.category.toLowerCase().includes(query) ||
-        (product.description && product.description.toLowerCase().includes(query))
-      );
+  //   const query = searchQuery.toLowerCase().trim();
+  //   const filtered = DUMMY_PRODUCTS.filter(product => {
+  //     return (
+  //       product.name.toLowerCase().includes(query) ||
+  //       product.category.toLowerCase().includes(query) ||
+  //       (product.description && product.description.toLowerCase().includes(query))
+  //     );
+  //   });
+
+  //   setFilteredProducts(filtered);
+  // }, [searchQuery]);
+
+  useEffect(() => {
+    const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const products = [];
+      snapshot.forEach((doc) => {
+        products.push({ id: doc.id, ...doc.data() });
+      });
+      setFilteredProducts(products);
     });
 
-    setFilteredProducts(filtered);
-  }, [searchQuery]);
+    return () => unsubscribe();
+  }, []);
 
   const renderProductCard = ({ item }) => (
     <TouchableOpacity 

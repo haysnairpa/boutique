@@ -35,4 +35,16 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-app-example
+# firebase config
+firebase.config.js
+
+# example folder
+app-example/
+
+# IDE
+.idea/
+.vscode/
+
+# firebase
+firebase.config.js
+!firebase.config.example.js
