@@ -30,20 +30,27 @@ const Home = () => {
   }, []);
 
   const renderProductCard = ({ item }) => (
-    <View style={styles.card}>
-      <Image 
-        source={{ uri: item.image }}
-        style={styles.productImage}
-        resizeMode="cover"
-      />
-      <View style={styles.productInfo}>
-        <Text style={styles.productName} numberOfLines={2}>{item.name}</Text>
-        <Text style={styles.category}>{item.category}</Text>
-        <Text style={styles.productPrice}>
-          Rp {item.price.toLocaleString('id-ID')}
-        </Text>
+    <TouchableOpacity 
+      onPress={() => router.push({
+        pathname: "/details",
+        params: item
+      })}
+    >
+      <View style={styles.card}>
+        <Image 
+          source={{ uri: item.image }}
+          style={styles.productImage}
+          resizeMode="cover"
+        />
+        <View style={styles.productInfo}>
+          <Text style={styles.productName} numberOfLines={2}>{item.name}</Text>
+          <Text style={styles.category}>{item.category}</Text>
+          <Text style={styles.productPrice}>
+            Rp {item.price.toLocaleString('id-ID')}
+          </Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
