@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -20,6 +20,7 @@ const AddProduct = () => {
     description: ''
   });
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -100,7 +101,8 @@ const AddProduct = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-
+    
+    setIsLoading(true);
     try {
       await addDoc(collection(db, 'products'), {
         name: formData.name,
@@ -118,6 +120,9 @@ const AddProduct = () => {
       navigation.goBack();
     } catch (error) {
       console.error('Error adding product:', error);
+      alert('Failed to add product. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -288,21 +293,48 @@ const AddProduct = () => {
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Description</Text>
           <TextInput 
-            style={[styles.input, styles.textArea]}
+            style={[
+              styles.input, 
+              styles.textArea,
+              errors.description && styles.errorBorder
+            ]}
             multiline
             numberOfLines={4}
             value={formData.description}
             onChangeText={(text) => handleInputChange('description', text)}
           />
+          {errors.description && (
+            <Text style={styles.errorText}>Description is required</Text>
+          )}
         </View>
 
         <TouchableOpacity 
-          style={styles.submitButton}
+          style={[
+            styles.submitButton,
+            isLoading && styles.submitButtonDisabled
+          ]}
           onPress={handleSubmit}
+          disabled={isLoading}
         >
-          <Text style={styles.submitButtonText}>Add Product</Text>
+          {isLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator color="#fff" size="small" />
+              <Text style={styles.submitButtonText}>Adding Product...</Text>
+            </View>
+          ) : (
+            <Text style={styles.submitButtonText}>Add Product</Text>
+          )}
         </TouchableOpacity>
       </View>
+
+      {isLoading && (
+        <View style={styles.overlay}>
+          <View style={styles.loadingCard}>
+            <ActivityIndicator color="#6366F1" size="large" />
+            <Text style={styles.loadingText}>Adding your product...</Text>
+          </View>
+        </View>
+      )}
     </ScrollView>
   );
 };
@@ -433,6 +465,46 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 4,
     fontFamily: 'Helvetica',
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingCard: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#111827',
+    fontFamily: 'Helvetica-Bold',
+    marginTop: 12,
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  submitButtonDisabled: {
+    backgroundColor: '#ccc',
   },
 });
 
