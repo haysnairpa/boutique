@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, FlatList, TextInput, Dimensions, Image, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 const DUMMY_PRODUCTS = [
   { id: '1', name: 'Floral Summer Dress', price: 299000, category: 'Dress', image: 'https://picsum.photos/200/300' },
@@ -17,6 +18,7 @@ const CARD_WIDTH = width / 2 - 24; // 2 columns with padding
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [greeting, setGreeting] = useState('');
+  const [filteredProducts, setFilteredProducts] = useState(DUMMY_PRODUCTS);
 
   useEffect(() => {
     const getGreeting = () => {
@@ -28,6 +30,25 @@ const Home = () => {
     };
     setGreeting(getGreeting());
   }, []);
+
+  // Fungsi untuk memfilter produk
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredProducts(DUMMY_PRODUCTS);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase().trim();
+    const filtered = DUMMY_PRODUCTS.filter(product => {
+      return (
+        product.name.toLowerCase().includes(query) ||
+        product.category.toLowerCase().includes(query) ||
+        (product.description && product.description.toLowerCase().includes(query))
+      );
+    });
+
+    setFilteredProducts(filtered);
+  }, [searchQuery]);
 
   const renderProductCard = ({ item }) => (
     <TouchableOpacity 
@@ -53,24 +74,36 @@ const Home = () => {
     </TouchableOpacity>
   );
 
+  // Render jika tidak ada hasil pencarian
+  const renderEmptyList = () => (
+    <View style={styles.emptyContainer}>
+      <Ionicons name="search-outline" size={48} color="#9ca3af" />
+      <Text style={styles.emptyText}>No products found</Text>
+      <Text style={styles.emptySubtext}>Try searching with different keywords</Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.greeting}>{greeting}, Aldi!</Text>
         <TextInput
           style={styles.searchBar}
-          placeholder="Search..."
+          placeholder="Search products..."
           value={searchQuery}
           onChangeText={setSearchQuery}
+          returnKeyType="search"
+          clearButtonMode="while-editing"
         />
       </View>
       <FlatList
-        data={DUMMY_PRODUCTS}
+        data={filteredProducts}
         renderItem={renderProductCard}
         keyExtractor={item => item.id}
         numColumns={2}
         columnWrapperStyle={styles.productRow}
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={renderEmptyList}
       />
       <TouchableOpacity 
         style={styles.fab}
@@ -92,11 +125,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   searchBar: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f3f4f6',
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 12,
     fontSize: 16,
-    fontFamily: 'Helvetica'
+    fontFamily: 'Helvetica',
+    color: '#111827',
   },
   productRow: {
     justifyContent: 'space-between',
@@ -161,6 +195,24 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: 'white',
     fontWeight: 'bold',
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 60,
+  },
+  emptyText: {
+    fontSize: 16,
+    fontFamily: 'Helvetica-Bold',
+    color: '#374151',
+    marginTop: 12,
+  },
+  emptySubtext: {
+    fontSize: 14,
+    fontFamily: 'Helvetica',
+    color: '#6b7280',
+    marginTop: 4,
   },
 });
 
